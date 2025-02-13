@@ -14,7 +14,7 @@ export const sendEmail = async ({ to, subject, html }) => {
 
   await transporter.sendMail({
     to,
-    from: '"GREEN_WORLD APP🙌" <yossef.mahmoud.shared@gmail.com>',
+    from: '"GREEN_WORLD APP 🌱" <yossef.mahmoud.shared@gmail.com>',
     subject,
     html,
   });

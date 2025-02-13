@@ -5,7 +5,11 @@ import { AppError } from '../utils/appError.js';
 export const generalFields = {
     name: joi.string(),
     phoneNumber: joi.string().pattern(new RegExp(/^01[0-2,5]{1}[0-9]{8}$/)),
-    password: joi.string().pattern(new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)),
+    password: joi.string()
+        .pattern(new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/))
+        .messages({
+            "string.pattern.base": "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.",
+        }),
     confirmPassword: joi.alternatives().try(
         joi.ref("password"),
         joi.ref("newPassword")
