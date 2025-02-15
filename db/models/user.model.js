@@ -12,7 +12,7 @@ const userSchema = new Schema({
         type: String,
         trim: true,
         unique: true,
-        required: trueو
+        required: true
     },
     password: {
         type: String,
@@ -28,7 +28,11 @@ const userSchema = new Schema({
         default: false
     },
     otp: String,
-    otpExpires: String
+    otpExpires: String,
+    otpVerified: {
+        type: Boolean,
+        default: false
+    },
 }, { timestamps: true })
 
 // model

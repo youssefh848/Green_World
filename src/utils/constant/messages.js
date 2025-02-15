@@ -17,7 +17,7 @@ export const messages = {
     ...generateMessage("user"),
     verified: "user verified successfully",
     invalidCredntiols: "invalid credentials",
-    notVerified: "user not verified",
+    notVerified: "Your account is not verified. Please check your email and click the verification link to activate your account.",
     invalidToken: "invalid token",
     loginSuccessfully: "login successfully",
     unauthorized: "unauthorized to access this API",
@@ -28,5 +28,6 @@ export const messages = {
     noAccountsFound: "no accounts found",
     otpSent: "OTP sent successfully",
     cannotDeletAdmin: "Cannot delete an admin account!",
+    otpVerified: "OTP verified successfully, you can now login with your credentials",
   },
 };
