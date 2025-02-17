@@ -25,7 +25,7 @@ const userSchema = new Schema({
     },
     isVerified: {
         type: Boolean,
-        default: true   //todo true
+        default: false
     },
     otp: String,
     otpExpires: String,
