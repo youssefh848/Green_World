@@ -266,4 +266,17 @@ export const resetPassword = async (req, res, next) => {
     return res.status(200).json({ message: messages.user.passwordUpdated, success: true })
 }
 
+// loginGoogle
+export const loginGoogle = async (req, res, next) => {
+    // get data from req
+    const { token } = req.user;
+    // send res 
+    return res.status(200).json({
+        message: messages.user.loginSuccessfully,
+        success: true,
+        token,
+    });
+
+}
+
 
