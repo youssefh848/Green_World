@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { isValid } from "../../middleware/validation.js";
 import { asyncHandler } from "../../middleware/asyncHandler.js";
+import passport from "../../utils/passport.js";
 import { forgetPasswordVal, loginVal, resetPasswordVal, signupVal, verifyOtpVal } from "./auth.validation.js";
-import { forgetPassword, login, resetPassword, signup, verifyAccount, verifyOtp } from "./auth.controller.js";
+import { forgetPassword, login, loginGoogle, resetPassword, signup, verifyAccount, verifyOtp } from "./auth.controller.js";
 
 
 const authRouter = Router();
@@ -41,6 +42,16 @@ authRouter.post('/reset-password',
     isValid(resetPasswordVal),
     asyncHandler(resetPassword)
 )
+
+// sign up with google
+authRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"], session: false }));
+
+// login callback
+authRouter.get(
+    "/google/callback",
+    passport.authenticate("google", { failureRedirect: "/login", session: false },),
+    asyncHandler(loginGoogle),
+);
 
 
 export default authRouter;

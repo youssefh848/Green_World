@@ -30,4 +30,7 @@ export const messages = {
     cannotDeletAdmin: "Cannot delete an admin account!",
     otpVerified: "OTP verified successfully, you can now login with your credentials",
   },
+  plant: {
+    ...generateMessage("plant"),
+  },
 };

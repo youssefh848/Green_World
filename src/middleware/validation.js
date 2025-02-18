@@ -1,6 +1,7 @@
 // import modules
 import joi from 'joi';
 import { AppError } from '../utils/appError.js';
+import { plantCategories, soilTypes, wateringFrequencies } from '../utils/constant/enums.js';
 
 export const generalFields = {
     name: joi.string(),
@@ -17,6 +18,19 @@ export const generalFields = {
     email: joi.string().email(),
     objectId: joi.string().hex().length(24),
     otp: joi.string().length(6),
+    scientificName: joi.string().trim().optional(),
+    category: joi.string().valid(...Object.values(plantCategories)).required(),
+    origin: joi.string().trim().required(),
+    description: joi.string().trim().optional(),
+    image: joi.object({
+    secure_url: joi.string().uri().required(),
+    public_id: joi.string().required(),
+    }).required(),
+    wateringFrequency: joi.string().valid(...Object.values(wateringFrequencies)).required(),
+    temperatureRange: joi.string().trim().required(),
+    soilType: joi.string().valid(...Object.values(soilTypes)).required(),
+    objectId: joi.string().hex().length(24),
+
 };
 
 export const isValid = (schema) => {
