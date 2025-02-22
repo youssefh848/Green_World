@@ -37,8 +37,14 @@ const plantSchema = new Schema(
       required: true,
     },
     temperatureRange: {
-      type: String,
-      required: true,
+      min: {
+        type: String,
+        required: true,
+      },
+      max: {
+        type: String,
+        required: true,
+      },
     },
     soilType: {
       type: String,

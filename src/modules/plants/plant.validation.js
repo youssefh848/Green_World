@@ -47,3 +47,8 @@ export const getAllPlantsVal = joi.object({
 export const deletePlantVal = joi.object({
     plantId : generalFields.objectId.required()
 })
+
+// get plant by category Val
+export const getPlantsByCategoryVal = joi.object({
+    category : generalFields.category.required()
+})

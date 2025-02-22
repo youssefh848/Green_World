@@ -32,5 +32,8 @@ export const messages = {
   },
   plant: {
     ...generateMessage("plant"),
+    invalidTemperatureRange: "Invalid temperature range. Ensure min < max.",
+    invalidCategory: "Invalid plant category",
+    noCategoryMatch: (category) => `No plants found in the category: ${category}`,
   },
 };
