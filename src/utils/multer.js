@@ -23,11 +23,11 @@ export const fileUpload = ({ folder, allowFile = fileValidation.image }) => {
   });
 
   const fileFilter = (req, file, cb) => {
-    console.log("File mimetype:", file.mimetype);
+    // console.log("File mimetype:", file.mimetype);
     if (allowFile.includes(file.mimetype)) {
       return cb(null, true);
     }
-    return cb(new Error("invalid file format"), false);
+    return cb(new Error("invalid file format"), false);  //todo add this messege in constant 
   };
 
   return multer({ storage, fileFilter });
