@@ -8,7 +8,6 @@ export const signupVal = joi.object({
     userName: generalFields.name.required(),
     email: generalFields.email.required(),
     password: generalFields.password.required(),
-    confirmPassword: generalFields.confirmPassword.required()
 })
 
 // loginVal
@@ -30,7 +29,7 @@ export const verifyOtpVal = joi.object({
 
 // resetPasswordVal
 export const resetPasswordVal = joi.object({
-    email:generalFields.email.required(),
+    email: generalFields.email.required(),
     newPassword: generalFields.password.required(),
     confirmPassword: generalFields.confirmPassword.required()
 })
