@@ -35,5 +35,8 @@ export const messages = {
     invalidTemperatureRange: "Invalid temperature range. Ensure min < max.",
     invalidCategory: "Invalid plant category",
     noCategoryMatch: (category) => `No plants found in the category: ${category}`,
+    imageRequired: "Image is required",
+    alreadyAdded: "Plant already added",
+    notFound: "Plant not found",
   },
 };

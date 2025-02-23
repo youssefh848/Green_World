@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { plantCategories, soilTypes, wateringFrequencies } from "../../src/utils/constant/enums.js";
 
 // schema
@@ -49,6 +49,11 @@ const plantSchema = new Schema(
     soilType: {
       type: String,
       enum: Object.values(soilTypes),
+      required: true,
+    },
+    ceratedBy: {
+      type: Types.ObjectId, 
+      ref: "User",
       required: true,
     },
   },

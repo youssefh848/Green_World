@@ -66,6 +66,7 @@ export const addPlant = async (req, res, next) => {
     wateringFrequency,
     temperatureRange: formattedTemperatureRange,
     soilType,
+    ceratedBy: req.authUser._id,
   });
 
   // Save the new plant
