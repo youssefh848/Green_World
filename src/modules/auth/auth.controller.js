@@ -270,12 +270,11 @@ export const resetPassword = async (req, res, next) => {
 export const loginGoogle = async (req, res, next) => {
     // get data from req
     const { token } = req.user;
+
+    const deepLink = `myapp://auth?token=${token}`;
+
     // send res 
-    return res.status(200).json({
-        message: messages.user.loginSuccessfully,
-        success: true,
-        token,
-    });
+    return res.redirect(deepLink);
 
 }
 
