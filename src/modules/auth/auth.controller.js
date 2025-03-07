@@ -278,4 +278,19 @@ export const loginGoogle = async (req, res, next) => {
 
 }
 
-
+// get profile
+export const getProfile = async (req, res, next) => {
+  // get data from req
+  const user = req.authUser._id;
+  // check existence
+  const userExist = await User.findById(user)
+  if (!userExist) {
+    return next(new AppError(messages.user.notExist, 404))
+  }
+  // send res 
+  return res.status(200).json({
+    message: messages.user.fetchedSuccessfully,
+    success: true,
+    data: userExist
+  })
+}

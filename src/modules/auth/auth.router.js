@@ -3,7 +3,10 @@ import { isValid } from "../../middleware/validation.js";
 import { asyncHandler } from "../../middleware/asyncHandler.js";
 import passport from "../../utils/passport.js";
 import { forgetPasswordVal, loginVal, resetPasswordVal, signupVal, verifyOtpVal } from "./auth.validation.js";
-import { forgetPassword, login, loginGoogle, resetPassword, signup, verifyAccount, verifyOtp } from "./auth.controller.js";
+import { forgetPassword, getProfile, login, loginGoogle, resetPassword, signup, verifyAccount, verifyOtp } from "./auth.controller.js";
+import { isAuthenticated } from "../../middleware/authentication.js";
+import { isAuthorized } from "../../middleware/autheraization.js";
+import { roles } from "../../utils/constant/enums.js";
 
 
 const authRouter = Router();
@@ -53,5 +56,11 @@ authRouter.get(
     asyncHandler(loginGoogle),
 );
 
+// get profile 
+authRouter.get('/profile',
+    isAuthenticated(),
+    isAuthorized([roles.USER, roles.ADMIN]),
+    asyncHandler(getProfile)
+)
 
 export default authRouter;
