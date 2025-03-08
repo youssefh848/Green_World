@@ -33,6 +33,7 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    plants: [{ type: Schema.Types.ObjectId, ref: "Plant", default: [] }],
 }, { timestamps: true })
 
 // model
