@@ -33,6 +33,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    image: {
+        secure_url: { type: String },
+        public_id: { type: String },
+    }
 }, { timestamps: true })
 
 // model
