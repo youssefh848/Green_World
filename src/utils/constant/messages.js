@@ -41,14 +41,18 @@ export const messages = {
   },
   weather:{
     ...generateMessage("weather"),
-    failToLocate: "Failed to locate the city. Please check the provided coordinates.",
-    invalidCoordinates: "Invalid coordinates. Please provide valid latitude and longitude.",
-    invalidCoordinateRange: "Invalid coordinate range. Latitude must be between -90 and 90, and longitude between -180 and 180.",
+    failToLocate: "Failed to locate the weather data.",
+    invalidCoordinates: "Invalid coordinates provided.",
+    invalidCoordinateRange: "Coordinates must be within valid ranges.",
+    cityNameRequired: "City name is required.",
+    failToSend: "Failed to send notification.",
+    sentSuccessfully: "Notification sent successfully.",
   },
   notification:{
     ...generateMessage("notification"),
     failToSend: "Failed to send notification",
     invalidUserId: "Invalid user ID. Please provide a valid user ID.",
     sentSuccessfully: "Notification sent successfully",
+    
   }
 };
