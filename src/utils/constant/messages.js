@@ -39,4 +39,16 @@ export const messages = {
     alreadyAdded: "Plant already added",
     notFound: "Plant not found",
   },
+  weather:{
+    ...generateMessage("weather"),
+    failToLocate: "Failed to locate the city. Please check the provided coordinates.",
+    invalidCoordinates: "Invalid coordinates. Please provide valid latitude and longitude.",
+    invalidCoordinateRange: "Invalid coordinate range. Latitude must be between -90 and 90, and longitude between -180 and 180.",
+  },
+  notification:{
+    ...generateMessage("notification"),
+    failToSend: "Failed to send notification",
+    invalidUserId: "Invalid user ID. Please provide a valid user ID.",
+    sentSuccessfully: "Notification sent successfully",
+  }
 };
