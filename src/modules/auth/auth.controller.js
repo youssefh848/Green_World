@@ -6,6 +6,7 @@ import { genreateToken, verifyToken } from '../../utils/token.js';
 import { roles } from '../../utils/constant/enums.js';
 import { sendEmail } from '../../utils/sendEmail.js';
 import { generateOTP, sendOTP } from '../../utils/OTP.js';
+import cloudinary from '../../utils/cloud.js';
 
 // signup
 export const signup = async (req, res, next) => {
@@ -280,17 +281,55 @@ export const loginGoogle = async (req, res, next) => {
 
 // get profile
 export const getProfile = async (req, res, next) => {
-  // get data from req
-  const user = req.authUser._id;
-  // check existence
-  const userExist = await User.findById(user)
-  if (!userExist) {
-    return next(new AppError(messages.user.notExist, 404))
-  }
-  // send res 
-  return res.status(200).json({
-    message: messages.user.fetchedSuccessfully,
-    success: true,
-    data: userExist
-  })
+    // get data from req
+    const user = req.authUser._id;
+    // check existence
+    const userExist = await User.findById(user)
+    if (!userExist) {
+        return next(new AppError(messages.user.notExist, 404))
+    }
+    // send res 
+    return res.status(200).json({
+        message: messages.user.fetchedSuccessfully,
+        success: true,
+        data: userExist
+    })
+}
+
+// addProfileImage
+export const addProfileImage = async (req, res, next) => {
+    const userId = req.authUser._id;
+
+    // Get old image data from DB
+    const userDoc = await User.findById(userId);
+    const oldPublicId = userDoc?.image?.public_id;
+
+    // Upload new image
+    let image = { secure_url: "", public_id: "" };
+    if (req.files?.image) {
+        // Delete old image from Cloudinary if exists
+        if (oldPublicId) {
+            await cloudinary.uploader.destroy(oldPublicId);
+        }
+
+        const { secure_url, public_id } = await cloudinary.uploader.upload(
+            req.files.image[0].path,
+            { folder: "Users" }
+        );
+        image = { secure_url, public_id };
+        req.failImages = [public_id];
+    }
+
+    // Update user
+    const userUpdated = await User.findByIdAndUpdate(
+        userId,
+        { image },
+        { new: true }
+    );
+
+    return res.status(200).json({
+        message: messages.user.updated,
+        success: true,
+        data: userUpdated
+    });
 }
