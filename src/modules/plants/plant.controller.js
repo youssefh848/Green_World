@@ -1,6 +1,7 @@
 import { Plant } from "../../../db/models/plants.model.js";
 import { AppError } from "../../utils/appError.js";
 import cloudinary, { deleteCloudImage } from "../../utils/cloud.js";
+import { plantCategories } from "../../utils/constant/enums.js";
 import { messages } from "../../utils/constant/messages.js";
 
 // Add Plant
@@ -26,6 +27,23 @@ export const addPlant = async (req, res, next) => {
     return next(new AppError(messages.plant.alreadyExist, 400));
   }
 
+  // Validate temperatureRange
+  if (
+    !temperatureRange ||
+    typeof temperatureRange !== "object" ||
+    temperatureRange.min == null ||
+    temperatureRange.max == null ||
+    temperatureRange.min >= temperatureRange.max
+  ) {
+    return next(new AppError(messages.plant.invalidTemperatureRange, 400));
+  }
+
+  // Append "°C" to temperature values
+  const formattedTemperatureRange = {
+    min: `${temperatureRange.min}°C`,
+    max: `${temperatureRange.max}°C`,
+  };
+
   // Handle image upload
   let Image = { secure_url: "", public_id: "" };
   if (req.files?.Image) {
@@ -34,7 +52,7 @@ export const addPlant = async (req, res, next) => {
       { folder: "plants" }
     );
     Image = { secure_url, public_id };
-    req.failImages = [public_id]; 
+    req.failImages = [public_id];
   }
 
   // Prepare plant data
@@ -46,8 +64,9 @@ export const addPlant = async (req, res, next) => {
     description,
     Image,
     wateringFrequency,
-    temperatureRange,
+    temperatureRange: formattedTemperatureRange,
     soilType,
+    ceratedBy: req.authUser._id,
   });
 
   // Save the new plant
@@ -84,7 +103,9 @@ export const updatePlant = async (req, res, next) => {
 
   // Convert name and scientificName to lowercase for consistency (if provided)
   const formattedName = name ? name.toLowerCase() : undefined;
-  const formattedScientificName = scientificName ? scientificName.toLowerCase() : undefined;
+  const formattedScientificName = scientificName
+    ? scientificName.toLowerCase()
+    : undefined;
 
   // Check if the plant exists
   const plant = await Plant.findById(plantId);
@@ -103,6 +124,26 @@ export const updatePlant = async (req, res, next) => {
     }
   }
 
+   // Validate temperatureRange if provided
+   if (
+    temperatureRange &&
+    (typeof temperatureRange !== "object" ||
+      temperatureRange.min == null ||
+      temperatureRange.max == null ||
+      temperatureRange.min >= temperatureRange.max)
+  ) {
+    return next(new AppError(messages.plant.invalidTemperatureRange, 400));
+  }
+
+  // Append "°C" to temperature values if temperatureRange is provided
+  let formattedTemperatureRange = plant.temperatureRange; // Use existing value if not updated
+  if (temperatureRange) {
+    formattedTemperatureRange = {
+      min: `${temperatureRange.min}°C`,
+      max: `${temperatureRange.max}°C`,
+    };
+  }
+  
   req.failImages = [];
 
   // Update Plant Image on Cloudinary
@@ -113,9 +154,12 @@ export const updatePlant = async (req, res, next) => {
     }
 
     // Upload new image
-    const { secure_url, public_id } = await cloudinary.uploader.upload(req.files.Image[0].path, {
-      folder: "plants",
-    });
+    const { secure_url, public_id } = await cloudinary.uploader.upload(
+      req.files.Image[0].path,
+      {
+        folder: "plants",
+      }
+    );
 
     // Assign new image
     plant.Image = { secure_url, public_id };
@@ -129,8 +173,8 @@ export const updatePlant = async (req, res, next) => {
   if (origin) plant.origin = origin;
   if (description) plant.description = description;
   if (wateringFrequency) plant.wateringFrequency = wateringFrequency;
-  if (temperatureRange) plant.temperatureRange = temperatureRange;
-  if (soilType) plant.soilType = soilType;
+  if (temperatureRange) plant.temperatureRange = formattedTemperatureRange;
+   if (soilType) plant.soilType = soilType;
 
   // Save Updated Plant
   const updatedPlant = await plant.save();
@@ -163,7 +207,6 @@ export const getSpecificPlant = async (req, res, next) => {
     data: plant,
   });
 };
-
 
 // get all plants
 export const getAllPlants = async (req, res, next) => {
@@ -204,7 +247,8 @@ export const getAllPlants = async (req, res, next) => {
     } else if (soilType) {
       noMatchMessage = messages.plant.noSoilTypeMatch(soilType);
     } else if (wateringFrequency) {
-      noMatchMessage = messages.plant.noWateringFrequencyMatch(wateringFrequency);
+      noMatchMessage =
+        messages.plant.noWateringFrequencyMatch(wateringFrequency);
     }
 
     return next(new AppError(noMatchMessage, 404));
@@ -246,5 +290,31 @@ export const deletePlantById = async (req, res, next) => {
   res.status(200).json({
     message: messages.plant.deleted,
     success: true,
+  });
+};
+
+// Get Plants By Category
+export const getPlantsByCategory = async (req, res, next) => {
+  const { category } = req.params; // category from URL parameter
+
+  // Check if the provided category is valid
+  if (!Object.values(plantCategories).includes(category)) {
+    return next(new AppError(messages.plant.invalidCategory, 400));
+  }
+
+  // Fetch plants from the database by category
+  const plants = await Plant.find({ category });
+
+  // If no plants found, return a message
+  if (!plants || plants.length === 0) {
+    return next(new AppError(messages.plant.noCategoryMatch(category), 404));
+  }
+
+  // Return the plants in the response
+  return res.status(200).json({
+    success: true,
+    message: messages.plant.fetchedSuccessfully,
+    count: plants,
+    data: plants,
   });
 };

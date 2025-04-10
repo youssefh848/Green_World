@@ -1,6 +1,6 @@
 import cors from 'cors';
 import { globalErrorHandling } from "./utils/appError.js";
-import { authRouter, plantRouter } from './modules/index.js';
+import { authRouter, myPlantRouter, plantRouter } from './modules/index.js';
 
 export const bootStrap = (app, express) => {
     // parse req
@@ -16,6 +16,7 @@ export const bootStrap = (app, express) => {
     // routing
     app.use("/auth", authRouter);
     app.use("/plant", plantRouter);
+    app.use("/my-plant", myPlantRouter);
 
 
     // global error

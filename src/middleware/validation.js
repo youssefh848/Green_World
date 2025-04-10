@@ -27,7 +27,12 @@ export const generalFields = {
     public_id: joi.string().required(),
     }).required(),
     wateringFrequency: joi.string().valid(...Object.values(wateringFrequencies)).required(),
-    temperatureRange: joi.string().trim().required(),
+    temperatureRange: joi.object({
+        min: joi.number().required()
+          .custom((value) => `${value}°C`, "Temperature with unit"), // إضافة "°C"
+        max: joi.number().required()
+          .custom((value) => `${value}°C`, "Temperature with unit"),
+      }).required(),
     soilType: joi.string().valid(...Object.values(soilTypes)).required(),
     objectId: joi.string().hex().length(24),
 
