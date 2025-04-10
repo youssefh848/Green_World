@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Weather } from "../../../db/index.js";
+import { Weather } from "../../../db/index.js"; // Import your Weather model
 import { AppError } from "../../utils/appError.js";
 import { messages } from "../../utils/constant/messages.js";
 
@@ -26,6 +26,17 @@ export const getWeatherByIP = async (req, res, next) => {
 
   const { description } = weatherRes.data.weather[0];
   const { temp, feels_like, humidity } = weatherRes.data.main;
+
+  // Save the weather data to the database
+  const weatherData = await Weather.create({
+    city,
+    country,
+    coordinates: { lat, lon },
+    description,
+    temperature: temp,
+    feelsLike: feels_like,
+    humidity,
+  });
 
   // Return the weather data without saving to the database
   res.status(200).json({
@@ -56,7 +67,7 @@ export const getWeatherByCoords = async (req, res, next) => {
 
   // Validate coordinate ranges
   if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
-    return next(new AppError(messages.weather.invalidCoordinateRange, 400));
+    return next(new AppError(messages.weather.invalidCoordinateRange , 400));
   }
 
   // Get weather data from OpenWeather API
@@ -71,6 +82,17 @@ export const getWeatherByCoords = async (req, res, next) => {
   }
 
   const { name: city, sys, weather, main } = weatherRes.data;
+
+  // Save the weather data to the database
+  const weatherData = await Weather.create({
+    city,
+    country: sys.country,
+    coordinates: { lat, lon },
+    description: weather[0].description,
+    temperature: main.temp,
+    feelsLike: main.feels_like,
+    humidity: main.humidity,
+  });
 
   // Return the weather data without saving to the database
   res.status(200).json({
@@ -94,7 +116,7 @@ export const getWeatherByCity = async (req, res, next) => {
 
   // Check if city name is provided
   if (!city) {
-    return next(new AppError("City name is required.", 400));
+    return next(new AppError(messages.weather.cityNameRequired, 400));
   }
 
   // Get weather data from OpenWeather API
@@ -109,6 +131,17 @@ export const getWeatherByCity = async (req, res, next) => {
   }
 
   const { name: cityName, sys, weather, main } = weatherRes.data;
+
+  // Save the weather data to the database
+  const weatherData = await Weather.create({
+    city: cityName,
+    country: sys.country,
+    coordinates: { lat: weatherRes.data.coord.lat, lon: weatherRes.data.coord.lon },
+    description: weather[0].description,
+    temperature: main.temp,
+    feelsLike: main.feels_like,
+    humidity: main.humidity,
+  });
 
   // Return the weather data without saving to the database
   res.status(200).json({
