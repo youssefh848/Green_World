@@ -33,6 +33,7 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    plants: [{ type: Schema.Types.ObjectId, ref: "Plant", default: [] }],
     image: {
         secure_url: { type: String },
         public_id: { type: String },
