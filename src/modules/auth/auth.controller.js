@@ -307,7 +307,7 @@ export const addProfileImage = async (req, res, next) => {
     // Upload new image
     let image = { secure_url: "", public_id: "" };
     if (req.files?.image) {
-        // ✅ Delete old image from Cloudinary if exists
+        // Delete old image from Cloudinary if exists
         if (oldPublicId) {
             await cloudinary.uploader.destroy(oldPublicId);
         }
