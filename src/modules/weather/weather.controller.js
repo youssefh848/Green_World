@@ -25,7 +25,7 @@ export const getWeatherByIP = async (req, res, next) => {
   );
 
   const { description } = weatherRes.data.weather[0];
-  const { temp, feels_like, humidity } = weatherRes.data.main;
+  const { temp, feels_like, humidity, temp_min, temp_max } = weatherRes.data.main;
 
   // Save the weather data to the database
   const weatherData = await Weather.create({
@@ -34,6 +34,8 @@ export const getWeatherByIP = async (req, res, next) => {
     coordinates: { lat, lon },
     description,
     temperature: temp,
+    minTemperature: temp_min,
+    maxTemperature: temp_max,
     feelsLike: feels_like,
     humidity,
   });
@@ -47,6 +49,8 @@ export const getWeatherByIP = async (req, res, next) => {
       weather: {
         description,
         temperature: temp,
+        minTemperature: temp_min,
+        maxTemperature: temp_max,
         feelsLike: feels_like,
         humidity,
       },
@@ -83,15 +87,19 @@ export const getWeatherByCoords = async (req, res, next) => {
 
   const { name: city, sys, weather, main } = weatherRes.data;
 
+  const { temp, feels_like, humidity, temp_min, temp_max } = main;
+
   // Save the weather data to the database
   const weatherData = await Weather.create({
     city,
     country: sys.country,
     coordinates: { lat, lon },
     description: weather[0].description,
-    temperature: main.temp,
-    feelsLike: main.feels_like,
-    humidity: main.humidity,
+    temperature: temp,
+    minTemperature: temp_min,
+    maxTemperature: temp_max,
+    feelsLike: feels_like,
+    humidity,
   });
 
   // Return the weather data without saving to the database
@@ -102,9 +110,11 @@ export const getWeatherByCoords = async (req, res, next) => {
       location: { city, country: sys.country },
       weather: {
         description: weather[0].description,
-        temperature: main.temp,
-        feelsLike: main.feels_like,
-        humidity: main.humidity,
+        temperature: temp,
+        minTemperature: temp_min,
+        maxTemperature: temp_max,
+        feelsLike: feels_like,
+        humidity,
       },
     },
   });
@@ -132,15 +142,19 @@ export const getWeatherByCity = async (req, res, next) => {
 
   const { name: cityName, sys, weather, main } = weatherRes.data;
 
+  const { temp, feels_like, humidity, temp_min, temp_max } = main;
+
   // Save the weather data to the database
   const weatherData = await Weather.create({
     city: cityName,
     country: sys.country,
     coordinates: { lat: weatherRes.data.coord.lat, lon: weatherRes.data.coord.lon },
     description: weather[0].description,
-    temperature: main.temp,
-    feelsLike: main.feels_like,
-    humidity: main.humidity,
+    temperature: temp,
+    minTemperature: temp_min,
+    maxTemperature: temp_max,
+    feelsLike: feels_like,
+    humidity,
   });
 
   // Return the weather data without saving to the database
@@ -151,9 +165,11 @@ export const getWeatherByCity = async (req, res, next) => {
       location: { city: cityName, country: sys.country },
       weather: {
         description: weather[0].description,
-        temperature: main.temp,
-        feelsLike: main.feels_like,
-        humidity: main.humidity,
+        temperature: temp,
+        minTemperature: temp_min,
+        maxTemperature: temp_max,
+        feelsLike: feels_like,
+        humidity,
       },
     },
   });
