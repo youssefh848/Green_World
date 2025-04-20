@@ -38,5 +38,24 @@ export const messages = {
     imageRequired: "Image is required",
     alreadyAdded: "Plant already added",
     notFound: "Plant not found",
+    noSuitablePlants: 'No suitable plants found for the current weather conditions.',
+    suggestedPlants: 'Plants suggested based on the current weather conditions.',
+    unableToGetLocation: 'Unable to retrieve location from IP.',
+    unableToGetWeather: 'Unable to retrieve weather data.',
   },
+  weather:{
+    ...generateMessage("weather"),
+    failToLocate: "Failed to locate the weather data.",
+    invalidCoordinates: "Invalid coordinates provided.",
+    invalidCoordinateRange: "Coordinates must be within valid ranges.",
+    cityNameRequired: "City name is required.",
+    failToSend: "Failed to send notification.",
+    sentSuccessfully: "Notification sent successfully.",
+  },
+  notification:{
+    ...generateMessage("notification"),
+    failToSend: "Failed to send notification",
+    invalidUserId: "Invalid user ID. Please provide a valid user ID.",
+    sentSuccessfully: "Notification sent successfully",
+  }
 };

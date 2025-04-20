@@ -3,6 +3,8 @@ import { AppError } from "../../utils/appError.js";
 import cloudinary, { deleteCloudImage } from "../../utils/cloud.js";
 import { plantCategories } from "../../utils/constant/enums.js";
 import { messages } from "../../utils/constant/messages.js";
+import axios from "axios";
+
 
 // Add Plant
 export const addPlant = async (req, res, next) => {
@@ -124,8 +126,8 @@ export const updatePlant = async (req, res, next) => {
     }
   }
 
-   // Validate temperatureRange if provided
-   if (
+  // Validate temperatureRange if provided
+  if (
     temperatureRange &&
     (typeof temperatureRange !== "object" ||
       temperatureRange.min == null ||
@@ -143,7 +145,6 @@ export const updatePlant = async (req, res, next) => {
       max: `${temperatureRange.max}°C`,
     };
   }
-  
   req.failImages = [];
 
   // Update Plant Image on Cloudinary
@@ -174,7 +175,7 @@ export const updatePlant = async (req, res, next) => {
   if (description) plant.description = description;
   if (wateringFrequency) plant.wateringFrequency = wateringFrequency;
   if (temperatureRange) plant.temperatureRange = formattedTemperatureRange;
-   if (soilType) plant.soilType = soilType;
+  if (soilType) plant.soilType = soilType;
 
   // Save Updated Plant
   const updatedPlant = await plant.save();
@@ -316,5 +317,61 @@ export const getPlantsByCategory = async (req, res, next) => {
     message: messages.plant.fetchedSuccessfully,
     count: plants,
     data: plants,
+  });
+};
+
+// Get plant by use weather 
+export const suggestPlantsBasedOnWeather = async (req, res, next) => {
+  // Get the user's IP address from the x-forwarded-for header
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  // Fetch location data based on IP
+  const locationResponse = await axios.get(`http://ip-api.com/json/${ip}`)
+    .catch(err => next(new AppError(messages.plant.unableToGetLocation, 400)));
+  
+  if (locationResponse.data.status !== 'success') {
+    return next(new AppError(messages.plant.unableToGetLocation, 400));
+  }
+
+  const { lat, lon, city } = locationResponse.data;
+
+  // Fetch weather data based on location
+  const weatherResponse = await axios.get(
+    `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}&units=metric`
+  ).catch(err => next(new AppError(messages.plant.unableToGetWeather, 400)));
+
+  const currentTemperature = weatherResponse.data.main.temp;
+
+  // Fetch all plants from the database
+  const allPlants = await Plant.find()
+    .catch(err => next(new AppError(messages.plant.failToFetch, 500)));
+
+  // Filter plants based on temperatureRange
+  const matchingPlants = allPlants.filter(plant => {
+    const minTemp = parseFloat(plant.temperatureRange.min);
+    const maxTemp = parseFloat(plant.temperatureRange.max);
+    return currentTemperature >= minTemp && currentTemperature <= maxTemp;
+  });
+
+  const count = matchingPlants.length;
+
+  // Check if any plants were found
+  if (matchingPlants.length === 0) {
+    return res.status(200).json({
+      success: true,
+      message: messages.plant.noSuitablePlants,
+      count: 0,
+      data: [],
+    });
+  }
+
+  // Get only plant IDs
+  const plantIds = matchingPlants.map(plant => plant._id);
+
+  // Send response with matching plant IDs and count
+  res.status(200).json({
+    success: true,
+    message: messages.plant.suggestedPlants,
+    count: count,
+    data: plantIds,
   });
 };

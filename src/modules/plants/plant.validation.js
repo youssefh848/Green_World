@@ -25,7 +25,6 @@ export const updatePlantVal = joi.object({
     temperatureRange : generalFields.temperatureRange.optional(),
     soilType : generalFields.soilType.optional(),
     plantId : generalFields.objectId.required()
-
 })
 
 // get specific plant Val

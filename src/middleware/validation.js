@@ -35,7 +35,20 @@ export const generalFields = {
       }).required(),
     soilType: joi.string().valid(...Object.values(soilTypes)).required(),
     objectId: joi.string().hex().length(24),
-
+    city: joi.string().trim(),
+    country: joi.string().trim(),
+    coordinates: joi.object({
+        lat: joi.number().min(-90).max(90),
+        lon: joi.number().min(-180).max(180),
+    }),
+    temperature: joi.number(),
+    feelsLike: joi.number(),
+    humidity: joi.number(),
+    title: joi.string().trim(),
+    message: joi.string(),
+    link: joi.string().uri(),
+    read: joi.boolean(),
+    
 };
 
 export const isValid = (schema) => {
