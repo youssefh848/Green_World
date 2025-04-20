@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addPlant, deletePlantById, getAllPlants, getPlantsByCategory, getSpecificPlant, updatePlant } from "./plant.controller.js";
+import { addPlant, deletePlantById, getAllPlants, getPlantsByCategory,  getSpecificPlant, suggestPlantsBasedOnWeather, updatePlant } from "./plant.controller.js";
 import { isAuthenticated } from "../../middleware/authentication.js";
 import { isAuthorized } from "../../middleware/autheraization.js";
 import { roles } from "../../utils/constant/enums.js";
@@ -29,7 +29,7 @@ plantRouter.put('/:plantId',
 )
 
 // get specific plant
-plantRouter.get('/:plantId', 
+plantRouter.get('/get-specific/:plantId', 
     isAuthenticated(),
     isAuthorized([roles.ADMIN , roles.USER]),
     isValid(getSpecificPlantVal),
@@ -59,4 +59,12 @@ plantRouter.get('/category/:category',
     isValid(getPlantsByCategoryVal),
     asyncHandler(getPlantsByCategory)
 )
+
+// suggest plant by weather 
+plantRouter.get('/suggest',
+    isAuthenticated(),
+    isAuthorized([roles.ADMIN , roles.USER]),
+    asyncHandler(suggestPlantsBasedOnWeather)
+)
+
 export default plantRouter;
