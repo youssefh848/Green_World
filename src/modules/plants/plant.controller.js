@@ -4,6 +4,8 @@ import cloudinary, { deleteCloudImage } from "../../utils/cloud.js";
 import { plantCategories } from "../../utils/constant/enums.js";
 import { messages } from "../../utils/constant/messages.js";
 import axios from "axios";
+import requestIp from 'request-ip';
+
 
 // Add Plant
 export const addPlant = async (req, res, next) => {
@@ -322,8 +324,8 @@ export const getPlantsByCategory = async (req, res, next) => {
 // Get plant by use weather 
 export const suggestPlantsBasedOnWeather = async (req, res, next) => {
   // Get the user's IP address from the x-forwarded-for header
-  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-
+  // const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const ip = requestIp.getClientIp(req);
   // Fetch location data based on IP
   const locationResponse = await axios.get(`http://ip-api.com/json/${ip}`)
     .catch(err => next(new AppError(messages.plant.unableToGetLocation, 400)));
