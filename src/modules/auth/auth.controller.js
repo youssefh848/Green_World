@@ -333,3 +333,4 @@ export const addProfileImage = async (req, res, next) => {
         data: userUpdated
     });
 }
+
