@@ -10,7 +10,6 @@ export const getWeatherByIP = async (req, res, next) => {
 
   // Get location data using IP
   const locationRes = await axios.get(`http://ip-api.com/json/${ip}`);
-
   const { lat, lon, city, country } = locationRes.data;
 
   // Check if location data is valid
@@ -27,20 +26,7 @@ export const getWeatherByIP = async (req, res, next) => {
   const { description } = weatherRes.data.weather[0];
   const { temp, feels_like, humidity, temp_min, temp_max } = weatherRes.data.main;
 
-  // Save the weather data to the database
-  const weatherData = await Weather.create({
-    city,
-    country,
-    coordinates: { lat, lon },
-    description,
-    temperature: temp,
-    minTemperature: temp_min,
-    maxTemperature: temp_max,
-    feelsLike: feels_like,
-    humidity,
-  });
-
-  // Return the weather data without saving to the database
+  // Send weather data in the response
   res.status(200).json({
     success: true,
     message: messages.weather.fetchedSuccessfully,
