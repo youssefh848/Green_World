@@ -57,5 +57,6 @@ export const messages = {
     failToSend: "Failed to send notification",
     invalidUserId: "Invalid user ID. Please provide a valid user ID.",
     sentSuccessfully: "Notification sent successfully",
+    userIdRequired: "User ID is required to send the notification.",
   }
 };
