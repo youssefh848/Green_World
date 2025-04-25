@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { sendNotification, fetchWeatherAndNotify } from './notification.controller.js';
+import { sendNotification, fetchWeatherAndNotify, getAllMessages } from './notification.controller.js';
 import { isAuthenticated } from '../../middleware/authentication.js';
 import { isAuthorized } from '../../middleware/autheraization.js';
 import { roles } from '../../utils/constant/enums.js';
@@ -27,4 +27,11 @@ notificationRouter.get(
   asyncHandler(fetchWeatherAndNotify)
 );
 
+// router to fetch all notifications
+notificationRouter.get(
+  '/',
+  isAuthenticated(),
+  isAuthorized([roles.ADMIN]),
+  asyncHandler(getAllMessages)
+);
 export default notificationRouter; 
