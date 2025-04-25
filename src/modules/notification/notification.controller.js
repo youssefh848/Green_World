@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 import { AppError } from '../../utils/appError.js';
 import { messages } from '../../utils/constant/messages.js';
 import axios from 'axios'; 
+import { Message } from '../../../db/index.js';
 
 // Initialize Socket.IO
 const io = new Server();
@@ -71,5 +72,15 @@ export const handleUserConnection = (socket) => {
   });
 };
 
+
+// get all messages
+export const getAllMessages = async (req, res, next) => {
+  const messages = await Message.find().populate('userId', 'userName email')
+  res.status(200).json({
+    success: true,
+    count: messages.length,
+    messages,
+  });
+};
 // Export the Socket.IO instance
 export { io };
