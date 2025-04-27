@@ -3,7 +3,7 @@ import { addPlant, deletePlantById, getAllPlants, getPlantsByCategory,  getSpeci
 import { isAuthenticated } from "../../middleware/authentication.js";
 import { isAuthorized } from "../../middleware/autheraization.js";
 import { roles } from "../../utils/constant/enums.js";
-import { addPlantVal, getAllPlantsVal, getPlantsByCategoryVal, getSpecificPlantVal, updatePlantVal } from "./plant.validation.js";
+import { addPlantVal, deletePlantVal, getAllPlantsVal, getPlantsByCategoryVal, getSpecificPlantVal, updatePlantVal } from "./plant.validation.js";
 import { isValid } from "../../middleware/validation.js";
 import { asyncHandler } from "../../middleware/asyncHandler.js";
 import { cloudUploads } from "../../utils/multer-cloud.js";
@@ -48,7 +48,7 @@ plantRouter.get('/',
 plantRouter.delete('/:plantId',
     isAuthenticated(),
     isAuthorized([roles.ADMIN]),
-    isValid(getSpecificPlantVal),
+    isValid(deletePlantVal),
     asyncHandler(deletePlantById)
 )
 
