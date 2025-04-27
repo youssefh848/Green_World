@@ -1,6 +1,6 @@
 import cors from 'cors';
 import { globalErrorHandling } from "./utils/appError.js";
-import { authRouter, myPlantRouter, notificationRouter, plantRouter, weatherRouter } from './modules/index.js';
+import { adminRouter, authRouter, myPlantRouter, notificationRouter, plantRouter, weatherRouter } from './modules/index.js';
 
 export const bootStrap = (app, express) => {
     // parse req
@@ -19,6 +19,7 @@ export const bootStrap = (app, express) => {
     app.use("/my-plant", myPlantRouter);
     app.use("/weather", weatherRouter);
     app.use("/notification", notificationRouter);
+    app.use("/admin", adminRouter)
 
     // global error
     app.use(globalErrorHandling);
