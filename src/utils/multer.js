@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import multer, { diskStorage } from "multer";
 
 export const fileValidation = {
-  image: ["image/jpeg", "image/png", "image/gif", "image/jpg",  "image/webp", "image/svg+xml"],
+  image: ["image/jpeg", "image/png", "image/gif", "image/jpg",  "image/webp", "image/svg+xml", "image/tiff", "image/bmp", "image/AVIF"],
 };
 
 export const fileUpload = ({ folder, allowFile = fileValidation.image }) => {

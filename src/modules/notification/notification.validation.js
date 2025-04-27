@@ -5,3 +5,8 @@ export const sendNotificationVal = joi.object({
    message: generalFields.message.required(),
    userId: generalFields.objectId,
 });
+
+
+export const fetchWeatherAndNotifyVal = joi.object({
+  userId: generalFields.objectId,
+});

@@ -1,16 +1,13 @@
 import axios from "axios";
-import { Weather } from "../../../db/index.js"; // Import your Weather model
 import { AppError } from "../../utils/appError.js";
 import { messages } from "../../utils/constant/messages.js";
 
 // Get weather by user IP
 export const getWeatherByIP = async (req, res, next) => {
-  // Get the user's IP address
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
   // Get location data using IP
   const locationRes = await axios.get(`http://ip-api.com/json/${ip}`);
-
   const { lat, lon, city, country } = locationRes.data;
 
   // Check if location data is valid
@@ -27,20 +24,7 @@ export const getWeatherByIP = async (req, res, next) => {
   const { description } = weatherRes.data.weather[0];
   const { temp, feels_like, humidity, temp_min, temp_max } = weatherRes.data.main;
 
-  // Save the weather data to the database
-  const weatherData = await Weather.create({
-    city,
-    country,
-    coordinates: { lat, lon },
-    description,
-    temperature: temp,
-    minTemperature: temp_min,
-    maxTemperature: temp_max,
-    feelsLike: feels_like,
-    humidity,
-  });
-
-  // Return the weather data without saving to the database
+  // Send weather data in the response
   res.status(200).json({
     success: true,
     message: messages.weather.fetchedSuccessfully,
@@ -144,20 +128,7 @@ export const getWeatherByCity = async (req, res, next) => {
 
   const { temp, feels_like, humidity, temp_min, temp_max } = main;
 
-  // Save the weather data to the database
-  const weatherData = await Weather.create({
-    city: cityName,
-    country: sys.country,
-    coordinates: { lat: weatherRes.data.coord.lat, lon: weatherRes.data.coord.lon },
-    description: weather[0].description,
-    temperature: temp,
-    minTemperature: temp_min,
-    maxTemperature: temp_max,
-    feelsLike: feels_like,
-    humidity,
-  });
-
-  // Return the weather data without saving to the database
+  // Return the weather data
   res.status(200).json({
     success: true,
     message: messages.weather.fetchedSuccessfully,
