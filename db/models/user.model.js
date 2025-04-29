@@ -37,7 +37,8 @@ const userSchema = new Schema({
     image: {
         secure_url: { type: String },
         public_id: { type: String },
-    }
+    },
+    fcmToken: String
 }, { timestamps: true })
 
 // model

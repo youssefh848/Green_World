@@ -33,3 +33,8 @@ export const resetPasswordVal = joi.object({
     newPassword: generalFields.password.required(),
     confirmPassword: generalFields.confirmPassword.required()
 })
+
+// fcm token
+export const fcmTokenVal = joi.object({
+    fcmToken: generalFields.name.required()
+})

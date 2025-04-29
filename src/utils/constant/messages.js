@@ -29,6 +29,7 @@ export const messages = {
     otpSent: "OTP sent successfully",
     cannotDeletAdmin: "Cannot delete an admin account!",
     otpVerified: "OTP verified successfully, you can now login with your credentials",
+    fcmUpdated: "FCM Token updated successfully"
   },
   plant: {
     ...generateMessage("plant"),
@@ -43,7 +44,7 @@ export const messages = {
     unableToGetLocation: 'Unable to retrieve location from IP.',
     unableToGetWeather: 'Unable to retrieve weather data.',
   },
-  weather:{
+  weather: {
     ...generateMessage("weather"),
     failToLocate: "Failed to locate the weather data.",
     invalidCoordinates: "Invalid coordinates provided.",
@@ -52,7 +53,7 @@ export const messages = {
     failToSend: "Failed to send notification.",
     sentSuccessfully: "Notification sent successfully.",
   },
-  notification:{
+  notification: {
     ...generateMessage("notification"),
     failToSend: "Failed to send notification",
     invalidUserId: "Invalid user ID. Please provide a valid user ID.",
