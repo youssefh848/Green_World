@@ -334,3 +334,25 @@ export const addProfileImage = async (req, res, next) => {
     });
 }
 
+// update fcm token
+export const updateFcmToken = async (req, res, next) => {
+
+    const userId = req.authUser._id;
+    const { fcmToken } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+        userId,
+        { fcmToken },
+        { new: true }
+    );
+
+    if (!user) {
+        return next(new AppError(messages.user.notExist, 404));
+    }
+
+    return res.status(200).json({
+        message: messages.user.fcmUpdated,
+        success: true,
+    });
+};
+
